@@ -35,6 +35,10 @@ int main(){
     }
     cout<<endl;
     int a[]={45,23,12,56,78};
+    //23,45,12,56,78
+    //23,12,45,56,78
+    //12,23,45,56,78
+
     //INSERTION SORT------->take an element and place it in its correct order
     for(int i=0;i<N;i++){
         int j=i;
@@ -51,3 +55,5 @@ int main(){
     cout<<endl;
 
 }
+//   5,62,21,32,65
+
