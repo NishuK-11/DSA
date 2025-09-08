@@ -1,0 +1,109 @@
+// class Solution {
+// public:
+//     vector<int> searchRange(vector<int>& nums, int target) {
+//         return helper(nums, 0, nums.size()-1, target);
+//     }
+
+//     vector<int> helper(vector<int>& nums, int low, int high, int target) {
+//         if (low > high) return {-1, -1};
+
+//         int mid = low + (high - low) / 2;
+
+//         if (nums[mid] == target) {
+//             vector<int> left = helper(nums, low, mid-1, target);
+//             vector<int> right = helper(nums, mid+1, high, target);
+
+//             int start = (left[0] != -1) ? left[0] : mid;
+//             int end   = (right[1] != -1) ? right[1] : mid;
+
+//             return {start, end};
+//         }
+//         else if (nums[mid] < target) {
+//             return helper(nums, mid+1, high, target);
+//         }
+//         else {
+//             return helper(nums, low, mid-1, target);
+//         }
+//     }
+// };
+// class Solution {
+// public:
+//     int findFirst(vector<int>& nums, int target) {
+//         int low = 0, high = nums.size()-1;
+//         int ans = -1;
+//         while(low <= high){
+//             int mid = low + (high - low) / 2;
+//             if(nums[mid] == target){
+//                 ans = mid;        // store possible answer
+//                 high = mid - 1;   // search left half
+//             }
+//             else if(nums[mid] < target){
+//                 low = mid + 1;
+//             }
+//             else{
+//                 high = mid - 1;
+//             }
+//         }
+//         return ans;
+//     }
+
+//     int findLast(vector<int>& nums, int target) {
+//         int low = 0, high = nums.size()-1;
+//         int ans = -1;
+//         while(low <= high){
+//             int mid = low + (high - low) / 2;
+//             if(nums[mid] == target){
+//                 ans = mid;       // store possible answer
+//                 low = mid + 1;   // search right half
+//             }
+//             else if(nums[mid] < target){
+//                 low = mid + 1;
+//             }
+//             else{
+//                 high = mid - 1;
+//             }
+//         }
+//         return ans;
+//     }
+
+//     vector<int> searchRange(vector<int>& nums, int target) {
+//         int first = findFirst(nums, target);
+//         int last = findLast(nums, target);
+//         return {first, last};
+//     }
+// };
+class Solution {
+public:
+    unordered_map<string, vector<int>> dp; // cache
+
+    vector<int> searchRange(vector<int>& nums, int target) {
+        return helper(nums, 0, nums.size()-1, target);
+    }
+
+    vector<int> helper(vector<int>& nums, int low, int high, int target) {
+        if (low > high) return {-1, -1};
+
+        // make key for memo
+        string key = to_string(low) + "," + to_string(high);
+        if (dp.count(key)) return dp[key];
+
+        int mid = low + (high - low) / 2;
+
+        if (nums[mid] == target) {
+            vector<int> left  = helper(nums, low, mid-1, target);
+            vector<int> right = helper(nums, mid+1, high, target);
+
+            int start = (left[0] != -1) ? left[0] : mid;
+            int end   = (right[1] != -1) ? right[1] : mid;
+
+            return dp[key] = {start, end};
+        }
+        else if (nums[mid] < target) {
+            return dp[key] = helper(nums, mid+1, high, target);
+        }
+        else {
+            return dp[key] = helper(nums, low, mid-1, target);
+        }
+    }
+};
+
